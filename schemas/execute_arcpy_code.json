@@ -1,0 +1,19 @@
+{
+  "name": "execute_arcpy_code",
+  "description": "通用 ArcPy 脚本执行器，作为 ArcGIS Pro Skill 框架的底层兜底方案。\n\n适用场景：仅当目标 GIS 操作没有对应的原子化专属 Skill 时才调用本工具；用于运行复杂的、组合多步骤的自定义 ArcPy 脚本。例如：需要串联多个 GP 工具、包含循环/条件分支、或需要自定义空间分析逻辑且无现成专属 Skill 时使用。\n\n不应调用的场景：当存在对应的原子化 Skill（如 get_arcgis_context、set_arcgis_environment、克里金插值等）时，应优先调用专属 Skill，而非本工具。专属 Skill 参数语义明确、错误处理更聚焦，能降低调用出错率。\n\n参数说明：\n- code：完整可执行的 Python 脚本字符串，需自行 import arcpy；脚本可设置 `_result` 变量向调用方返回结构化结果。\n- local_vars：可选，注入到脚本命名空间的预定义变量字典（键值对），脚本内可直接引用这些变量名。\n\n执行环境说明：执行前会自动设置 overwriteOutput=True，无需在脚本中重复设置。\n\n返回说明：返回结构包含 success、result、messages、error 字段；成功时 result 为一个对象，包含 stdout（脚本 print 输出）、return_value（若脚本设置 _result 则为该值，否则为 null）、locals（脚本执行后序列化的局部变量字典，已剔除 __ 开头的内建键）。",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "code": {
+        "type": "string",
+        "description": "完整可执行的 Python 脚本字符串。需自行 import arcpy；可包含任意 ArcPy 调用与标准 Python 逻辑。脚本可通过设置 `_result` 变量向调用方返回结构化结果（例如 `_result = {\"count\": 100, \"path\": out_path}`）。"
+      },
+      "local_vars": {
+        "type": "object",
+        "description": "可选，注入到脚本命名空间的预定义变量字典。键为变量名（字符串），值为任意类型的变量初值（如路径字符串、数值、列表等），脚本内可直接按变量名引用。additionalProperties 允许任意类型的值。",
+        "additionalProperties": true
+      }
+    },
+    "required": ["code"]
+  }
+}
