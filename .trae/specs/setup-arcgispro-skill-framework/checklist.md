@@ -7,15 +7,19 @@
 
 ## 双交付物规范
 - [x] 每个已实现的 Skill 同时存在 JSON Schema 文件与 Python 执行函数
-- [x] JSON Schema 包含 `name`、`description`、`input_schema` 三个字段
+- [x] JSON Schema 包含 `name`、`description`、参数定义（`parameters` 或 `input_schema`）三个核心字段
 - [x] Python 函数与 Schema 通过命名约定一一对应
 
 ## 通用执行器 execute_arcpy_code
 - [x] 接收 `code`（字符串）参数，在 arcgispro-py3 环境执行
-- [x] 捕获 `arcpy.ExecuteError`，结构化返回 GP 工具错误消息
-- [x] 捕获通用 `Exception`，返回语法/运行时错误信息，不导致进程崩溃
+- [x] 使用 `sys.stdout` / `sys.stderr` 重定向捕获脚本输出
+- [x] 捕获通用 `Exception`，通过 `traceback.format_exc()` 返回完整堆栈，不导致进程崩溃
 - [x] 执行前显式设置 `arcpy.env.overwriteOutput = True`
 - [x] Schema 描述明确说明：仅当无对应原子化 Skill 时才调用此兜底工具
+- [x] Schema 描述包含完整的 Coding Rules（6 条编码规范）
+- [x] Schema 使用 `parameters` 顶层字段（而非 `input_schema`）
+- [x] 返回值为字符串（成功时为 stdout/stderr 输出，失败时为 traceback + 输出日志）
+- [x] `finally` 块中恢复 stdout/stderr 并关闭 StringIO
 
 ## 上下文感知 get_arcgis_context
 - [x] 返回活动工程（.aprx）路径
@@ -45,6 +49,7 @@
 - [x] 每个参数的 `description` 说明物理意义（类型/单位/坐标系/可选/默认值）
 
 ## 统一返回格式
-- [x] 成功返回包含 `success=True`、`result`、`messages`、`error=None`
-- [x] 失败返回包含 `success=False`、`result=None`、`messages`、`error={"type","message"}`
-- [x] 所有 Skill 函数遵循该返回格式
+- [x] 顶层原子化 Skill 成功返回包含 `success=True`、`result`、`messages`、`error=None`
+- [x] 顶层原子化 Skill 失败返回包含 `success=False`、`result=None`、`messages`、`error={"type","message"}`
+- [x] 顶层原子化 Skill（get_arcgis_context / set_arcgis_environment）均遵循结构化返回格式
+- [x] execute_arcpy_code 返回纯字符串（成功为 stdout/stderr，失败为 traceback + 日志）
