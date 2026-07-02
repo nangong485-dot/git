@@ -2,6 +2,8 @@
 
 让大模型（Claude）通过标准化 Skill 接口驱动本地 ArcGIS Pro（arcgispro-py3 环境）完成 GIS 任务。
 
+> **在 Trae 中使用**：本项目已配置为 Trae Skill，入口为 [`.trae/skills/arcgis-pro/SKILL.md`](file:///workspace/.trae/skills/arcgis-pro/SKILL.md)。在 Trae 中打开本项目后，AI 遇到 ArcGIS Pro 相关任务时会自动加载该 Skill，按说明书调用对应工具函数。
+
 ## 1. 双层架构
 
 本框架采用「顶层原子化高频工具 + 底层通用执行器兜底」的双层架构，在调用准确性与灵活性之间取得平衡。
@@ -139,3 +141,34 @@
 - Schema 的 `description` 字段保持简短（一句话说明工具用途），避免冗长。
 - 需要约束模型生成行为的内容（如 Coding Rules、不应调用场景、示例代码）放入 `prompts/` 下的对应文件。
 - 当前 `execute_arcpy_code` 已采用此分层；后续原子化 Skill 若有复杂的调用约束，也应遵循同样模式。
+
+## 10. 在 Trae 中使用
+
+本项目已内置为 Trae Skill，入口文件为 [`.trae/skills/arcgis-pro/SKILL.md`](file:///workspace/.trae/skills/arcgis-pro/SKILL.md)。
+
+### 工作原理
+
+Trae 中的 Skill 通过 `SKILL.md` 告诉 AI「在什么场景下应该怎么做事」。当你在对话中提出 ArcGIS Pro 相关需求时，AI 会：
+
+1. 识别到任务与 GIS 相关，自动加载 `arcgis-pro` Skill
+2. 读取 `SKILL.md` 中的使用说明和工具清单
+3. 按照说明书调用项目中的 Python 函数（位于 `core/` 和 `skills/` 目录）
+4. 将执行结果返回给你
+
+### 触发方式
+
+- **隐性触发**：直接描述任务，如「帮我给 roads 图层做 50 米缓冲区」「把 C 盘的项目导出成 PDF」，AI 自动判断是否使用该 Skill
+- **显性触发**：在对话中明确提及 Skill 名称，如「用 ArcGIS Pro 技能帮我创建一个文件地理数据库」
+
+### 调用流程
+
+1. AI 从 `skills/` 或 `core/` 导入对应函数
+2. 传入参数执行函数
+3. 解析返回结果（结构化 dict 或字符串）
+4. 向你汇报结果
+
+### 注意事项
+
+- 确保 Trae 的 Python 解释器已切换到 `arcgispro-py3` 环境（否则无法 `import arcpy`）
+- 所有文件路径使用原始字符串（`r"..."`）或正斜杠
+- 优先使用专属工具函数，复杂多步骤任务才用 `execute_arcpy_code` 兜底
