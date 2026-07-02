@@ -1,12 +1,12 @@
 {
   "name": "execute_arcpy_code",
-  "description": "你是一个专业的 ArcGIS Pro 自动化助手。当你需要执行任何 GIS 空间分析、地理数据处理或操作 ArcGIS 工程文件时，请调用此工具。此工具将在本地的 arcgispro-py3 环境中直接执行你编写的 Python 脚本，并返回控制台的输出结果 (stdout/stderr)。\n\n适用场景：仅当目标 GIS 操作没有对应的原子化专属 Skill 时才调用本工具；用于运行复杂的、组合多步骤的自定义 ArcPy 脚本。例如：需要串联多个 GP 工具、包含循环/条件分支、或需要自定义空间分析逻辑且无现成专属 Skill 时使用。\n\n不应调用的场景：当存在对应的原子化 Skill（如 get_arcgis_context、set_arcgis_environment、克里金插值等）时，应优先调用专属 Skill，而非本工具。专属 Skill 参数语义明确、错误处理更聚焦，能降低调用出错率。\n\nCoding Rules（生成 code 参数时必须严格遵守）：\n1. 基础设置：始终在代码开头包含 import arcpy。\n2. 环境覆盖：始终包含 arcpy.env.overwriteOutput = True，防止因输出文件已存在而导致报错。\n3. 输出打印：通过 print() 语句输出关键的执行节点和最终结果路径，因为执行器只通过标准输出 (stdout) 捕获你的结果。\n4. 错误处理：使用 try...except 块。必须专门捕获 arcpy.ExecuteError 以提取详细的 GIS 报错信息。\n5. 路径规范：使用原始字符串（如 r\"C:\\data\\map.aprx\"）或正斜杠（\"C:/data/map.aprx\"）处理文件路径，避免转义错误。\n6. 独立运行：每次传入的代码必须是自包含的完整脚本，不要假设上下文中已保存了之前的变量状态。\n\n返回说明：返回值为字符串，包含脚本执行期间 print 的所有输出（stdout）和错误信息（stderr）。成功时返回 SUCCESS 开头或正常输出；失败时返回错误堆栈与输出日志。",
+  "description": "在本地 ArcGIS Pro 环境中执行 Python/ArcPy 脚本并返回结果。",
   "parameters": {
     "type": "object",
     "properties": {
       "code": {
         "type": "string",
-        "description": "需要执行的完整 Python 脚本代码。代码必须遵循 Coding Rules：\n1. 开头 import arcpy；\n2. 设置 arcpy.env.overwriteOutput = True；\n3. 用 print() 输出关键节点和结果路径；\n4. 使用 try...except 捕获 arcpy.ExecuteError；\n5. 路径用原始字符串或正斜杠；\n6. 自包含完整脚本，不依赖前次执行状态。\n\n示例：将 C:/temp/data.gdb 下的 roads 要素做 50 米缓冲区，code 应包含 import arcpy、try/except、print 输出、arcpy.analysis.Buffer 调用。"
+        "description": "需要执行的完整 Python 脚本代码。代码必须遵循下方定义的 [Coding Rules]。"
       }
     },
     "required": ["code"]

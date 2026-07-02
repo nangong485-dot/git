@@ -51,14 +51,9 @@
 
 ### Coding Rules（仅适用于 execute_arcpy_code）
 
-调用 `execute_arcpy_code` 时，生成的 `code` 脚本必须遵守以下规则：
+调用 `execute_arcpy_code` 时，模型生成的 `code` 脚本必须遵守 6 条编码规则（基础设置 / 环境覆盖 / 输出打印 / 错误处理 / 路径规范 / 独立运行）。完整规则文本与示例见 [prompts/execute_arcpy_code.md](file:///workspace/prompts/execute_arcpy_code.md)。
 
-1. **基础设置**：始终在代码开头包含 `import arcpy`。
-2. **环境覆盖**：始终包含 `arcpy.env.overwriteOutput = True`（执行器也会兜底设置一次）。
-3. **输出打印**：通过 `print()` 语句输出关键的执行节点和最终结果路径，因为执行器只通过标准输出（stdout）捕获结果。
-4. **错误处理**：使用 `try...except` 块。必须专门捕获 `arcpy.ExecuteError` 以提取详细的 GIS 报错信息。
-5. **路径规范**：使用原始字符串（如 `r"C:\data\map.aprx"`）或正斜杠（`"C:/data/map.aprx"`）处理文件路径，避免转义错误。
-6. **独立运行**：每次传入的代码必须是自包含的完整脚本，不要假设上下文中已保存了之前的变量状态。
+> **重要约定**：Coding Rules 与角色描述（Tool Description）是 **LLM 系统提示词**，不嵌入 Schema 的 `description` 字段。Schema 的 `description` 仅保留简短的工具用途声明，详细约束在向模型注册工具时通过系统提示词注入。详见下方第 9 节。
 
 ## 5. 已实现 Skill 一览
 
@@ -90,20 +85,37 @@
 ├── skills/                        # 顶层原子化 Skill 的 Python 执行函数
 │   ├── __init__.py
 │   └── set_arcgis_environment.py  # set_arcgis_environment 实现
-└── schemas/                       # 各 Skill 的 JSON Schema 工具声明
-    ├── execute_arcpy_code.json
-    ├── get_arcgis_context.json
-    └── set_arcgis_environment.json
+├── schemas/                       # 各 Skill 的 JSON Schema 工具声明（形式化声明）
+│   ├── execute_arcpy_code.json
+│   ├── get_arcgis_context.json
+│   └── set_arcgis_environment.json
+└── prompts/                       # LLM 系统提示词（角色描述 / Coding Rules / 示例）
+    └── execute_arcpy_code.md
 ```
 
 约定：
 
 - `core/` 存放框架基础设施（统一错误处理、上下文、通用执行器）。
 - `skills/` 存放顶层原子化 Skill 的 Python 实现。
-- `schemas/` 存放所有 Skill 的 JSON Schema 工具声明。
+- `schemas/` 存放所有 Skill 的 JSON Schema 工具声明（仅 `name` / `description` / `parameters`，描述简短）。
+- `prompts/` 存放 LLM 系统提示词（Tool Description、Coding Rules、Example），向模型注册工具时注入。
 
 ## 8. 运行环境
 
 - **Python 环境**：`arcgispro-py3`（ArcGIS Pro 自带 conda 环境）。
 - **依赖**：`arcpy`（仅在该环境可用，标准 Python 环境无法安装）。
 - **调用方**：大模型通过 Schema 声明调用对应函数，函数在本地 `arcgispro-py3` 环境执行，结果以统一返回格式回传给模型。
+
+## 9. Schema 与系统提示词分离原则
+
+为保持 Schema 简洁并与主流大模型 Tool Definition 格式一致，本框架对工具元信息做如下分层：
+
+| 层级 | 位置 | 内容 | 注入时机 |
+|------|------|------|----------|
+| 形式化声明 | `schemas/<skill>.json` | `name` / `description`（简短）/ `parameters` | 注册工具时作为 tool definition |
+| 系统提示词 | `prompts/<skill>.md` | Tool Description（角色）、Coding Rules、Example | 作为 system prompt 注入对话 |
+
+**约定**：
+- Schema 的 `description` 字段保持简短（一句话说明工具用途），避免冗长。
+- 需要约束模型生成行为的内容（如 Coding Rules、不应调用场景、示例代码）放入 `prompts/` 下的对应文件。
+- 当前 `execute_arcpy_code` 已采用此分层；后续原子化 Skill 若有复杂的调用约束，也应遵循同样模式。
