@@ -62,6 +62,12 @@
 | `get_arcgis_context` | 顶层原子化 | `core/context.py` | 获取当前活动工程 / 地图 / 工作空间 / 坐标系等上下文 |
 | `set_arcgis_environment` | 顶层原子化 | `skills/set_arcgis_environment.py` | 设置工作空间、坐标系、范围、像元大小、`overwriteOutput` 等 |
 | `execute_arcpy_code` | 底层兜底 | `core/executor.py` | 通用 ArcPy 脚本执行器，接收完整 Python 脚本字符串 |
+| `vector_analysis` | 工具箱 | `skills/vector_analysis.py` | 矢量分析：buffer / intersect / union / near / spatial_join / dissolve |
+| `raster_analysis` | 工具箱 | `skills/raster_analysis.py` | 栅格分析：reclassify / raster_calculator / slope / aspect / contour |
+| `interpolation` | 工具箱 | `skills/interpolation.py` | 插值分析：idw / kriging / spline / natural_neighbor |
+| `spatial_statistics` | 工具箱 | `skills/spatial_statistics.py` | 空间统计：kernel_density / point_density / zonal_statistics / hot_spot_analysis / summary_statistics |
+
+> 4 个工具箱 Skill 均通过 `operation` 参数路由到具体工具，共覆盖 20 个常用空间分析与统计工具。
 
 ## 6. 新增 Skill 的步骤
 
@@ -84,11 +90,19 @@
 │   └── executor.py                # execute_arcpy_code 通用执行器实现
 ├── skills/                        # 顶层原子化 Skill 的 Python 执行函数
 │   ├── __init__.py
-│   └── set_arcgis_environment.py  # set_arcgis_environment 实现
+│   ├── set_arcgis_environment.py  # set_arcgis_environment 实现
+│   ├── vector_analysis.py         # 矢量分析工具箱
+│   ├── raster_analysis.py         # 栅格分析工具箱
+│   ├── interpolation.py           # 插值分析工具箱
+│   └── spatial_statistics.py      # 空间统计工具箱
 ├── schemas/                       # 各 Skill 的 JSON Schema 工具声明（形式化声明）
 │   ├── execute_arcpy_code.json
 │   ├── get_arcgis_context.json
-│   └── set_arcgis_environment.json
+│   ├── set_arcgis_environment.json
+│   ├── vector_analysis.json
+│   ├── raster_analysis.json
+│   ├── interpolation.json
+│   └── spatial_statistics.json
 └── prompts/                       # LLM 系统提示词（角色描述 / Coding Rules / 示例）
     └── execute_arcpy_code.md
 ```

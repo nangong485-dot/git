@@ -1,0 +1,51 @@
+{
+  "name": "vector_analysis",
+  "description": "矢量分析工具箱，通过 operation 参数选择缓冲区/相交/联合/近邻/空间连接/融合等矢量分析工具。",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "operation": {
+        "type": "string",
+        "enum": ["buffer", "intersect", "union", "near", "spatial_join", "dissolve"],
+        "description": "矢量分析类型，可选值 buffer/intersect/union/near/spatial_join/dissolve"
+      },
+      "input_features": {
+        "description": "输入要素类路径（字符串）或要素类列表（intersect/union 支持多输入）",
+        "oneOf": [
+          { "type": "string" },
+          { "type": "array", "items": { "type": "string" } }
+        ]
+      },
+      "output_features": {
+        "type": "string",
+        "description": "输出要素类路径（near 操作不需要）"
+      },
+      "near_features": {
+        "type": "string",
+        "description": "近邻要素类路径（仅 near 操作需要）"
+      },
+      "target_features": {
+        "type": "string",
+        "description": "目标要素类路径（仅 spatial_join 操作需要）"
+      },
+      "join_features": {
+        "type": "string",
+        "description": "连接要素类路径（仅 spatial_join 操作需要）"
+      },
+      "distance": {
+        "type": "string",
+        "description": "缓冲距离，含单位字符串如 \"50 Meters\"（仅 buffer 操作需要）"
+      },
+      "dissolve_fields": {
+        "type": "array",
+        "items": { "type": "string" },
+        "description": "融合字段列表（仅 dissolve 操作，可选）"
+      },
+      "search_radius": {
+        "type": "string",
+        "description": "搜索半径，含单位字符串（near/spatial_join 可选）"
+      }
+    },
+    "required": ["operation"]
+  }
+}
