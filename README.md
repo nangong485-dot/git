@@ -67,8 +67,9 @@
 | `interpolation` | 工具箱 | `skills/interpolation.py` | 插值分析：idw / kriging / spline / natural_neighbor |
 | `spatial_statistics` | 工具箱 | `skills/spatial_statistics.py` | 空间统计：kernel_density / point_density / zonal_statistics / hot_spot_analysis / summary_statistics |
 | `map_layout` | 工具箱 | `skills/map_layout.py` | 地图排版与出图：list_maps / list_layouts / add_layer / remove_layer / set_layer_visibility / set_map_extent / zoom_to_layer / update_title / update_legend / export_layout |
+| `data_management` | 工具箱 | `skills/data_management.py` | 数据与工程管理：create_gdb / compact_gdb / list_feature_classes / list_rasters / list_tables / create_feature_class / copy_data / delete_data / rename_data / describe_data |
 
-> 5 个工具箱 Skill 均通过 `operation` 参数路由到具体工具，共覆盖 30 个常用 GIS 操作。
+> 6 个工具箱 Skill 均通过 `operation` 参数路由到具体工具，共覆盖 40 个常用 GIS 操作。
 
 ## 6. 新增 Skill 的步骤
 
@@ -96,7 +97,8 @@
 │   ├── raster_analysis.py         # 栅格分析工具箱
 │   ├── interpolation.py           # 插值分析工具箱
 │   ├── spatial_statistics.py      # 空间统计工具箱
-│   └── map_layout.py              # 地图排版与出图工具箱
+│   ├── map_layout.py              # 地图排版与出图工具箱
+│   └── data_management.py         # 数据与工程管理工具箱
 ├── schemas/                       # 各 Skill 的 JSON Schema 工具声明（形式化声明）
 │   ├── execute_arcpy_code.json
 │   ├── get_arcgis_context.json
@@ -105,7 +107,8 @@
 │   ├── raster_analysis.json
 │   ├── interpolation.json
 │   ├── spatial_statistics.json
-│   └── map_layout.json
+│   ├── map_layout.json
+│   └── data_management.json
 └── prompts/                       # LLM 系统提示词（角色描述 / Coding Rules / 示例）
     └── execute_arcpy_code.md
 ```
