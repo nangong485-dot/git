@@ -1,0 +1,14 @@
+{
+  "name": "execute_arcpy_code",
+  "description": "在本地 ArcGIS Pro 环境中执行 Python/ArcPy 脚本并返回结果。",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "code": {
+        "type": "string",
+        "description": "需要执行的完整 Python 脚本代码。代码必须遵循下方定义的 [Coding Rules]。"
+      }
+    },
+    "required": ["code"]
+  }
+}

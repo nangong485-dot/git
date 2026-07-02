@@ -1,0 +1,55 @@
+{
+  "name": "interpolation",
+  "description": "插值分析工具箱，通过 operation 参数选择 IDW/克里金/样条函数/自然邻域等插值方法。",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "operation": {
+        "type": "string",
+        "enum": ["idw", "kriging", "spline", "natural_neighbor"],
+        "description": "插值方法类型，枚举 idw/kriging/spline/natural_neighbor"
+      },
+      "in_point_features": {
+        "type": "string",
+        "description": "输入点要素类路径"
+      },
+      "z_field": {
+        "type": "string",
+        "description": "插值字段名（要插值的数值字段，如高程、浓度）"
+      },
+      "out_raster": {
+        "type": "string",
+        "description": "输出栅格路径"
+      },
+      "cell_size": {
+        "type": "string",
+        "description": "输出栅格像元大小（与坐标系单位一致，如米）"
+      },
+      "power": {
+        "type": "number",
+        "description": "IDW 距离幂指数（仅 idw，默认 2，值越大远点权重衰减越快）"
+      },
+      "search_radius": {
+        "type": "string",
+        "description": "搜索半径策略（如 \"VARIABLE 12\" 表示变半径用 12 个点，\"FIXED 1000 Meters\" 表示固定半径）"
+      },
+      "semi_variogram": {
+        "type": "string",
+        "description": "半变异函数模型（仅 kriging，默认 Spherical，可选 Spherical/Circular/Exponential/Gaussian/Linear）"
+      },
+      "method": {
+        "type": "string",
+        "description": "样条插值方法（仅 spline，默认 REGULARIZED，可选 REGULARIZED/TENSION）"
+      },
+      "weight": {
+        "type": "number",
+        "description": "样条权重（仅 spline REGULARIZED，默认 0.1）"
+      },
+      "number_points": {
+        "type": "integer",
+        "description": "样条使用的点数（仅 spline，默认 12）"
+      }
+    },
+    "required": ["operation"]
+  }
+}

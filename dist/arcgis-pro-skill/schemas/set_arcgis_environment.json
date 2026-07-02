@@ -1,0 +1,42 @@
+{
+  "name": "set_arcgis_environment",
+  "description": "设置 ArcPy 运行环境，包括工作空间（workspace）、输出坐标系（coordinate_system）、处理范围（extent）、像元大小（cell_size）、是否允许覆盖已有输出（overwrite_output）、捕捉栅格（snap_raster）、掩膜（mask）、TIN 保存区域（tin_save_area）共八项环境变量。适用场景：(1) 在执行 GP 工具前需要统一设置运行环境；(2) 需要切换当前工作空间到指定地理数据库或文件夹；(3) 需要确保输出可覆盖已有文件（overwrite_output=true）；(4) 需要约束栅格处理范围或对齐像元。所有参数均为可选，未传入时保持当前值不变。调用完成后返回设置后的环境快照，便于确认实际生效的配置。",
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "workspace": {
+        "type": "string",
+        "description": "当前工作空间路径。可为地理数据库（.gdb）路径或普通文件夹路径，作为后续 GP 工具默认的输入/输出位置。传入后写入 arcpy.env.workspace。"
+      },
+      "coordinate_system": {
+        "type": "string",
+        "description": "输出坐标系。可为 WKT 字符串、坐标系名称（如 \"WGS 1984 UTM Zone 50N\"）或 .prj 文件路径。传入后写入 arcpy.env.outputCoordinateSystem。"
+      },
+      "extent": {
+        "type": "string",
+        "description": "处理范围。格式为 \"XMin YMin XMax YMax\" 的坐标字符串，或图层路径（自动取图层范围）。坐标系与输出坐标系一致。传入后写入 arcpy.env.extent。"
+      },
+      "cell_size": {
+        "type": "string",
+        "description": "输出像元大小。数值或字符串形式，单位与输出坐标系一致（如米、度）。用于栅格分析时统一像元分辨率。传入后写入 arcpy.env.cellSize。"
+      },
+      "overwrite_output": {
+        "type": "boolean",
+        "description": "是否允许覆盖已有输出。true 表示允许覆盖，false 表示禁止。传入后强制转换为布尔值并写入 arcpy.env.overwriteOutput。"
+      },
+      "snap_raster": {
+        "type": "string",
+        "description": "捕捉栅格路径。用于对齐输出栅格像元边界，使其与参考栅格一致。传入后写入 arcpy.env.snapRaster。"
+      },
+      "mask": {
+        "type": "string",
+        "description": "掩膜栅格或要素路径。限制 GP 工具仅处理掩膜覆盖范围内的像元或区域。传入后写入 arcpy.env.mask。"
+      },
+      "tin_save_area": {
+        "type": "string",
+        "description": "TIN 保存区域。用于 TIN 相关工具的处理范围约束。传入后写入 arcpy.env.tinSaveArea。"
+      }
+    },
+    "required": []
+  }
+}

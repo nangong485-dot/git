@@ -1,0 +1,78 @@
+{
+  "name": "data_management",
+  "description": "数据与工程管理工具箱，通过 operation 参数管理地理数据库（GDB）、要素类与栅格数据集。",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "operation": {
+        "type": "string",
+        "enum": ["create_gdb", "compact_gdb", "list_feature_classes", "list_rasters", "list_tables", "create_feature_class", "copy_data", "delete_data", "rename_data", "describe_data"],
+        "description": "数据管理操作类型，枚举 10 种：create_gdb（创建文件地理数据库）、compact_gdb（压缩地理数据库）、list_feature_classes（列出要素类）、list_rasters（列出栅格数据集）、list_tables（列出表）、create_feature_class（创建要素类）、copy_data（复制数据）、delete_data（删除数据）、rename_data（重命名数据）、describe_data（描述数据集元信息）。"
+      },
+      "out_folder_path": {
+        "type": "string",
+        "description": "输出文件夹路径（仅 create_gdb，GDB 将创建在此目录）。物理意义为文件地理数据库所在的父目录，需为已存在的文件夹。"
+      },
+      "gdb_name": {
+        "type": "string",
+        "description": "地理数据库名称（仅 create_gdb，不含 .gdb 后缀）。系统将自动追加 .gdb 扩展名。"
+      },
+      "gdb_path": {
+        "type": "string",
+        "description": "地理数据库完整路径（仅 compact_gdb，如 \"C:/data/my.gdb\"）。物理意义为待压缩的文件地理数据库全路径。"
+      },
+      "workspace": {
+        "type": "string",
+        "description": "工作空间路径（仅 list_* 操作，GDB 路径或文件夹路径）。物理意义为列举数据集时设置的 arcpy.env.workspace，可为 .gdb 全路径或包含 shapefile/栅格的文件夹。"
+      },
+      "feature_type": {
+        "type": "string",
+        "enum": ["Point", "Polygon", "Polyline", "MultiPoint"],
+        "description": "要素类型过滤（仅 list_feature_classes，可选值 Point/Polygon/Polyline/MultiPoint，默认全部）。物理意义为按几何类型筛选要素类。"
+      },
+      "out_path": {
+        "type": "string",
+        "description": "输出位置（仅 create_feature_class，通常为 GDB 路径）。物理意义为新要素类所在的地理数据库或文件夹。"
+      },
+      "out_name": {
+        "type": "string",
+        "description": "输出要素类名称（仅 create_feature_class）。物理意义为新创建要素类的名称，不含路径。"
+      },
+      "geometry_type": {
+        "type": "string",
+        "enum": ["POINT", "MULTIPOINT", "POLYLINE", "POLYGON"],
+        "description": "几何类型（仅 create_feature_class，可选 POINT/MULTIPOINT/POLYLINE/POLYGON）。物理意义为要素类所存储的几何形状类型。"
+      },
+      "spatial_reference": {
+        "description": "空间参考（仅 create_feature_class，可选，可为 WKID 整数如 4326、坐标系名称字符串、或 .prj 文件路径，默认未知坐标系）。物理意义为要素类的坐标参照系。",
+        "oneOf": [
+          { "type": "integer" },
+          { "type": "string" }
+        ]
+      },
+      "fields": {
+        "type": "array",
+        "description": "字段定义列表（仅 create_feature_class，可选，每项为 [字段名, 字段类型] 如 [[\"POP\",\"LONG\"],[\"NAME\",\"TEXT\"]]）。物理意义为创建要素类后追加的业务字段。",
+        "items": {
+          "type": "array",
+          "items": { "type": "string" },
+          "minItems": 2,
+          "maxItems": 2
+        }
+      },
+      "in_data": {
+        "type": "string",
+        "description": "输入数据路径（copy_data/delete_data/rename_data/describe_data 必填）。物理意义为待操作的源数据集（要素类/栅格/表等）的路径。"
+      },
+      "out_data": {
+        "type": "string",
+        "description": "输出数据路径（copy_data/rename_data 必填）。物理意义为目标数据集的输出路径或新名称。"
+      },
+      "data_type": {
+        "type": "string",
+        "description": "数据类型（copy_data/delete_data/rename_data 可选，如 FeatureClass/RasterDataset/Table，默认自动推断）。物理意义为显式指定源数据的数据集类型，避免歧义。"
+      }
+    },
+    "required": ["operation"]
+  }
+}

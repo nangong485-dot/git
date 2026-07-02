@@ -1,0 +1,92 @@
+{
+  "name": "spatial_statistics",
+  "description": "空间统计工具箱，通过 operation 参数选择核密度/点密度/区域统计/热点分析/汇总统计等空间统计工具。",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "operation": {
+        "type": "string",
+        "enum": ["kernel_density", "point_density", "zonal_statistics", "hot_spot_analysis", "summary_statistics"],
+        "description": "空间统计类型。枚举 5 种：kernel_density（核密度估计）、point_density（点密度估计）、zonal_statistics（区域统计）、hot_spot_analysis（热点分析 Getis-Ord Gi*）、summary_statistics（汇总统计）。"
+      },
+      "in_features": {
+        "type": "string",
+        "description": "输入要素类路径。用于 kernel_density / point_density，即待统计的点或线要素。"
+      },
+      "input_features": {
+        "type": "string",
+        "description": "输入要素类路径。用于 hot_spot_analysis（注意命名与 in_features 区分），即待识别热点/冷点的要素。"
+      },
+      "in_zone_data": {
+        "type": "string",
+        "description": "输入分区数据路径。用于 zonal_statistics，定义统计区域的要素或栅格。"
+      },
+      "zone_field": {
+        "type": "string",
+        "description": "分区字段名。用于 zonal_statistics，标识每个分区的唯一值字段。"
+      },
+      "in_value_raster": {
+        "type": "string",
+        "description": "输入值栅格路径。用于 zonal_statistics，作为统计源栅格，在每个分区内汇总其像元值。"
+      },
+      "in_table": {
+        "type": "string",
+        "description": "输入表路径。用于 summary_statistics，即待汇总统计的属性表或要素类。"
+      },
+      "out_raster": {
+        "type": "string",
+        "description": "输出栅格路径。用于 kernel_density / point_density，存放密度计算结果。"
+      },
+      "out_table": {
+        "type": "string",
+        "description": "输出表路径。用于 zonal_statistics / summary_statistics，存放统计汇总结果。"
+      },
+      "output_features": {
+        "type": "string",
+        "description": "输出要素类路径。用于 hot_spot_analysis，含 GiZScore、GiPValue 字段的结果要素。"
+      },
+      "input_field": {
+        "type": "string",
+        "description": "热点分析统计字段名。用于 hot_spot_analysis，参与 Getis-Ord Gi* 计算的数值字段。"
+      },
+      "population_field": {
+        "type": "string",
+        "description": "人口/权重字段名。用于 kernel_density / point_density，默认 \"NONE\" 表示每点计 1。"
+      },
+      "cell_size": {
+        "type": "string",
+        "description": "输出像元大小。单位与坐标系一致（如投影坐标系为米，地理坐标系为度）。"
+      },
+      "search_radius": {
+        "type": "string",
+        "description": "搜索半径。用于 kernel_density，含单位的字符串（如 \"1000 Meters\"），决定密度计算的平滑范围。"
+      },
+      "statistics_type": {
+        "type": "string",
+        "description": "统计类型。用于 zonal_statistics，默认 \"ALL\"，可选 MEAN/MAJORITY/MAXIMUM/MEDIAN/MINIMUM/MINORITY/RANGE/STD/SUM/VARIETY/ALL。"
+      },
+      "statistics_fields": {
+        "type": "array",
+        "description": "统计字段列表。用于 summary_statistics，格式 [[\"字段名\",\"统计类型\"], ...]，统计类型如 SUM/MEAN/MIN/MAX/STD。",
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "case_field": {
+        "description": "分组字段。用于 summary_statistics，可选，支持字符串（单字段）或字符串列表（多字段），按其值分组分别统计。",
+        "oneOf": [
+          { "type": "string" },
+          { "type": "array", "items": { "type": "string" } }
+        ]
+      },
+      "conceptualization_of_spatial_relationships": {
+        "type": "string",
+        "description": "空间关系概念化。用于 hot_spot_analysis，默认 \"INVERSE_DISTANCE\"，可选 INVERSE_DISTANCE/INVERSE_DISTANCE_SQUARED/FIXED_DISTANCE/BAND_OF_DISTANCE/ZONE_OF_INDIFFERENCE/POLYGON_CONTIGUITY/K_NEAREST_NEIGHBORS/GET_SPATIAL_WEIGHTS_FROM_FILE。"
+      }
+    },
+    "required": ["operation"]
+  }
+}

@@ -1,0 +1,72 @@
+{
+  "name": "map_layout",
+  "description": "地图排版与出图工具箱，通过 operation 参数操作 .aprx 工程中的地图、布局、图层及导出。",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "operation": {
+        "type": "string",
+        "enum": ["list_maps", "list_layouts", "add_layer", "remove_layer", "set_layer_visibility", "set_map_extent", "zoom_to_layer", "update_title", "update_legend", "export_layout"],
+        "description": "排版出图操作类型，枚举 10 种：list_maps/list_layouts/add_layer/remove_layer/set_layer_visibility/set_map_extent/zoom_to_layer/update_title/update_legend/export_layout"
+      },
+      "aprx_path": {
+        "type": "string",
+        "description": "ArcGIS Pro 工程文件路径（.aprx），所有操作必填"
+      },
+      "map_name": {
+        "type": "string",
+        "description": "地图名称（add_layer/remove_layer/set_layer_visibility 需要）"
+      },
+      "layout_name": {
+        "type": "string",
+        "description": "布局名称（set_map_extent/zoom_to_layer/update_title/update_legend/export_layout 需要）"
+      },
+      "layer_path": {
+        "type": "string",
+        "description": "要添加的图层文件路径（.lyrx 或要素类/栅格路径，仅 add_layer）"
+      },
+      "layer_name": {
+        "type": "string",
+        "description": "图层名称（remove_layer/set_layer_visibility/zoom_to_layer 需要）"
+      },
+      "visible": {
+        "type": "boolean",
+        "description": "图层可见性布尔值（仅 set_layer_visibility）"
+      },
+      "extent": {
+        "type": "string",
+        "description": "地图范围字符串，格式 \"XMin YMin XMax YMax\"（仅 set_map_extent）"
+      },
+      "title_text": {
+        "type": "string",
+        "description": "新标题文本内容（仅 update_title）"
+      },
+      "title_element_name": {
+        "type": "string",
+        "description": "标题元素在布局中的名称（仅 update_title，可选，默认第一个文本元素）"
+      },
+      "legend_element_name": {
+        "type": "string",
+        "description": "图例元素在布局中的名称（仅 update_legend，可选，默认第一个图例元素）"
+      },
+      "visible_layers": {
+        "type": "array",
+        "items": { "type": "string" },
+        "description": "图例中要显示的图层名称列表（仅 update_legend）"
+      },
+      "output_path": {
+        "type": "string",
+        "description": "导出文件输出路径（仅 export_layout）"
+      },
+      "format": {
+        "type": "string",
+        "description": "导出格式，可选 PDF/PNG/JPEG/TIFF，默认 PDF（仅 export_layout）"
+      },
+      "resolution": {
+        "type": "number",
+        "description": "导出分辨率（DPI），默认 300（仅 export_layout）"
+      }
+    },
+    "required": ["operation"]
+  }
+}

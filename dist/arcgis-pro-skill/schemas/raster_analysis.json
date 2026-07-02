@@ -1,0 +1,63 @@
+{
+  "name": "raster_analysis",
+  "description": "栅格分析工具箱，通过 operation 参数选择重分类/栅格计算器/坡度/坡向/等值线等栅格分析工具。",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "operation": {
+        "type": "string",
+        "enum": ["reclassify", "raster_calculator", "slope", "aspect", "contour"],
+        "description": "栅格分析类型，枚举 5 种：reclassify（重分类）、raster_calculator（栅格计算器）、slope（坡度）、aspect（坡向）、contour（等值线）。"
+      },
+      "in_raster": {
+        "type": "string",
+        "description": "输入栅格路径。作为栅格分析的输入表面或值栅格，可为栅格数据集路径或图层名。"
+      },
+      "out_raster": {
+        "type": "string",
+        "description": "输出栅格路径。栅格分析结果（重分类/栅格计算器/坡度/坡向）的保存位置，常用 .tif 或地理数据库栅格数据集。"
+      },
+      "output_features": {
+        "type": "string",
+        "description": "输出要素类路径（仅 contour 操作）。等值线为矢量线要素，需保存到地理数据库要素类或 shapefile。"
+      },
+      "reclass_field": {
+        "type": "string",
+        "description": "重分类所依据的字段名（仅 reclassify）。通常为 \"Value\"，表示按像元值进行重映射。"
+      },
+      "remap": {
+        "type": "string",
+        "description": "重映射字符串（仅 reclassify）。格式 \"旧值区间;...\"，如 \"1 5;6 10;11 15\"，每个区间以空格分隔起止值，多区间以分号分隔。"
+      },
+      "expression": {
+        "type": "string",
+        "description": "栅格计算表达式（仅 raster_calculator）。使用 arcpy 栅格代数语法，如 '\"raster1\" * 2 + \"raster2\"'，或引用 rasters 字典中的变量名如 'r1 * 2 + r2'。"
+      },
+      "rasters": {
+        "type": "object",
+        "description": "表达式中引用的栅格字典（仅 raster_calculator）。键为变量名，值为栅格路径，加载为 arcpy.sa.Raster 对象注入求值命名空间。",
+        "additionalProperties": {
+          "type": "string"
+        }
+      },
+      "output_unit": {
+        "type": "string",
+        "enum": ["DEGREE", "PERCENT_RISE"],
+        "description": "坡度输出单位（仅 slope）。\"DEGREE\"（度，默认）或 \"PERCENT_RISE\"（百分比坡升）。"
+      },
+      "z_factor": {
+        "type": "number",
+        "description": "Z 因子（高程缩放，仅 slope/contour，默认 1）。用于在 x/y 单位与 z 单位不一致时对高程值进行缩放。"
+      },
+      "contour_interval": {
+        "type": "number",
+        "description": "等值线间距（仅 contour，单位与栅格值一致）。相邻等高线之间的高程差。"
+      },
+      "base_contour": {
+        "type": "number",
+        "description": "基准等高线值（仅 contour，默认 0）。等值线从此值起按 contour_interval 递增/递减生成。"
+      }
+    },
+    "required": ["operation"]
+  }
+}
