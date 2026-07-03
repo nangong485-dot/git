@@ -4,6 +4,8 @@
 支持的 operation：
   - list_maps：列出工程中所有地图
   - list_layouts：列出工程中所有布局
+  - create_map：创建新地图
+  - create_layout：创建新布局
   - add_layer：向指定地图添加图层
   - remove_layer：从指定地图移除图层
   - set_layer_visibility：设置图层可见性
@@ -23,9 +25,9 @@ def map_layout(operation, **kwargs):
     """地图排版与出图工具箱，根据 operation 路由到对应的 arcpy.mp 功能。
 
     Args:
-        operation: 排版出图操作类型，可选值 list_maps/list_layouts/add_layer/
-            remove_layer/set_layer_visibility/set_map_extent/zoom_to_layer/
-            update_title/update_legend/export_layout。
+        operation: 排版出图操作类型，可选值 list_maps/list_layouts/create_map/
+            create_layout/add_layer/remove_layer/set_layer_visibility/
+            set_map_extent/zoom_to_layer/update_title/update_legend/export_layout。
         **kwargs: 各 operation 对应的参数，详见模块级 docstring。
 
     Returns:
@@ -55,6 +57,47 @@ def map_layout(operation, **kwargs):
             "operation": "list_layouts",
             "aprx_path": aprx_path,
             "layouts": layouts,
+        })
+
+    # 创建新地图
+    elif operation == "create_map":
+        map_name = kwargs["map_name"]
+
+        aprx = arcpy.mp.ArcGISProject(aprx_path)
+        new_map = aprx.createMap(map_name)
+
+        aprx.save()
+        return make_success({
+            "operation": "create_map",
+            "aprx_path": aprx_path,
+            "map_name": new_map.name,
+            "saved": True,
+        })
+
+    # 创建新布局
+    elif operation == "create_layout":
+        layout_name = kwargs["layout_name"]
+        page_width = kwargs.get("page_width", 8.5)
+        page_height = kwargs.get("page_height", 11)
+        page_units = kwargs.get("page_units", "INCHES")
+
+        aprx = arcpy.mp.ArcGISProject(aprx_path)
+        new_layout = aprx.createLayout(
+            layout_name,
+            page_width,
+            page_height,
+            page_units,
+        )
+
+        aprx.save()
+        return make_success({
+            "operation": "create_layout",
+            "aprx_path": aprx_path,
+            "layout_name": new_layout.name,
+            "page_width": page_width,
+            "page_height": page_height,
+            "page_units": page_units,
+            "saved": True,
         })
 
     # 向指定地图添加图层
@@ -272,5 +315,5 @@ def map_layout(operation, **kwargs):
     else:
         return make_error(
             "ValueError",
-            f"不支持的 operation: {operation}，支持的 operation: list_maps/list_layouts/add_layer/remove_layer/set_layer_visibility/set_map_extent/zoom_to_layer/update_title/update_legend/export_layout",
+            f"不支持的 operation: {operation}，支持的 operation: list_maps/list_layouts/create_map/create_layout/add_layer/remove_layer/set_layer_visibility/set_map_extent/zoom_to_layer/update_title/update_legend/export_layout",
         )

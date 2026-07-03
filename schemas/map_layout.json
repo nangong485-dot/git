@@ -6,8 +6,8 @@
     "properties": {
       "operation": {
         "type": "string",
-        "enum": ["list_maps", "list_layouts", "add_layer", "remove_layer", "set_layer_visibility", "set_map_extent", "zoom_to_layer", "update_title", "update_legend", "export_layout"],
-        "description": "排版出图操作类型，枚举 10 种：list_maps/list_layouts/add_layer/remove_layer/set_layer_visibility/set_map_extent/zoom_to_layer/update_title/update_legend/export_layout"
+        "enum": ["list_maps", "list_layouts", "create_map", "create_layout", "add_layer", "remove_layer", "set_layer_visibility", "set_map_extent", "zoom_to_layer", "update_title", "update_legend", "export_layout"],
+        "description": "排版出图操作类型，枚举 12 种：list_maps/list_layouts/create_map/create_layout/add_layer/remove_layer/set_layer_visibility/set_map_extent/zoom_to_layer/update_title/update_legend/export_layout"
       },
       "aprx_path": {
         "type": "string",
@@ -15,11 +15,23 @@
       },
       "map_name": {
         "type": "string",
-        "description": "地图名称（add_layer/remove_layer/set_layer_visibility 需要）"
+        "description": "地图名称（create_map/add_layer/remove_layer/set_layer_visibility 需要）"
       },
       "layout_name": {
         "type": "string",
-        "description": "布局名称（set_map_extent/zoom_to_layer/update_title/update_legend/export_layout 需要）"
+        "description": "布局名称（create_layout/set_map_extent/zoom_to_layer/update_title/update_legend/export_layout 需要）"
+      },
+      "page_width": {
+        "type": "number",
+        "description": "布局页面宽度，默认 8.5（仅 create_layout）"
+      },
+      "page_height": {
+        "type": "number",
+        "description": "布局页面高度，默认 11（仅 create_layout）"
+      },
+      "page_units": {
+        "type": "string",
+        "description": "页面单位，可选 INCHES/CENTIMETERS/POINTS/PIXELS，默认 INCHES（仅 create_layout）"
       },
       "layer_path": {
         "type": "string",
