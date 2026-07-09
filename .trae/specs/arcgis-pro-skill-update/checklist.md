@@ -1,0 +1,5 @@
+- [x] Checkpoint 1: SKILL.md 中版本声明已更新为 3.5.2
+- [x] Checkpoint 2: INSTALL.md 中版本信息已更新为 3.5.2
+- [x] Checkpoint 3: data_management.py 中已添加 create_parquet_cache 操作支持
+- [x] Checkpoint 4: data_management.json Schema 中已添加 create_parquet_cache 操作定义
+- [x] Checkpoint 5: 所有更新的文件语法正确，无语法错误

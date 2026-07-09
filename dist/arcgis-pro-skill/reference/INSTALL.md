@@ -113,6 +113,6 @@ arcgis-pro-skill/
 
 ## 版本信息
 
-- 兼容 ArcGIS Pro 版本：3.0+
+- 兼容 ArcGIS Pro 版本：3.5.2
 - Skill 版本：1.0
 - 工具总数：9 个工具函数，50 种 operation

@@ -3,7 +3,7 @@
 通过 operation 参数路由到具体的数据与工程管理操作，统一调用 arcpy.management
 与 arcpy.Describe 完成地理数据库（GDB）、要素类、栅格数据集与表的增删改查。
 
-支持的 operation（共 10 种）：
+支持的 operation（共 11 种）：
   - create_gdb：创建文件地理数据库
   - compact_gdb：压缩地理数据库
   - list_feature_classes：列出工作空间中的要素类
@@ -14,6 +14,7 @@
   - delete_data：删除数据
   - rename_data：重命名数据
   - describe_data：描述数据集元信息（要素类/栅格/表）
+  - create_parquet_cache：为 Parquet 文件创建缓存（ArcGIS Pro 3.5+）
 
 所有分支成功后返回 make_success({"operation": ..., ...})；未支持的 operation
 返回 make_error("ValueError", ...)。
@@ -31,7 +32,7 @@ def data_management(operation, **kwargs):
     Args:
         operation: 数据管理操作类型，可选值 create_gdb/compact_gdb/
             list_feature_classes/list_rasters/list_tables/create_feature_class/
-            copy_data/delete_data/rename_data/describe_data。
+            copy_data/delete_data/rename_data/describe_data/create_parquet_cache。
         **kwargs: 各 operation 对应的参数，详见模块级 docstring 与各分支注释。
 
     Returns:
@@ -244,9 +245,21 @@ def data_management(operation, **kwargs):
             "description": result_info,
         })
 
+    # 为 Parquet 文件创建缓存（ArcGIS Pro 3.5+）
+    elif operation == "create_parquet_cache":
+        input_path = kwargs["input_path"]
+        output_cache_path = kwargs["output_cache_path"]
+        arcpy.da.CreateParquetCache(input_path, output_cache_path)
+        return make_success({
+            "operation": "create_parquet_cache",
+            "input_path": input_path,
+            "output_cache_path": output_cache_path,
+            "output": output_cache_path,
+        })
+
     # 未支持的 operation
     else:
         return make_error(
             "ValueError",
-            f"不支持的 operation: {operation}，支持的 operation: create_gdb/compact_gdb/list_feature_classes/list_rasters/list_tables/create_feature_class/copy_data/delete_data/rename_data/describe_data",
+            f"不支持的 operation: {operation}，支持的 operation: create_gdb/compact_gdb/list_feature_classes/list_rasters/list_tables/create_feature_class/copy_data/delete_data/rename_data/describe_data/create_parquet_cache",
         )

@@ -24,7 +24,7 @@ description: 操作 ArcGIS Pro 工程文件（.aprx），执行空间分析、�
 
 - 所有代码必须在 **`arcgispro-py3`** 环境中执行（ArcGIS Pro 自带的 conda 环境）
 - 需要 `arcpy` 模块（仅在 ArcGIS Pro Python 环境中可用）
-- 本地必须安装 ArcGIS Pro（3.x 版本）
+- 本地必须安装 ArcGIS Pro（3.5.2 版本）
 
 ## 工具清单
 

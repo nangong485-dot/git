@@ -6,8 +6,8 @@
     "properties": {
       "operation": {
         "type": "string",
-        "enum": ["create_gdb", "compact_gdb", "list_feature_classes", "list_rasters", "list_tables", "create_feature_class", "copy_data", "delete_data", "rename_data", "describe_data"],
-        "description": "数据管理操作类型，枚举 10 种：create_gdb（创建文件地理数据库）、compact_gdb（压缩地理数据库）、list_feature_classes（列出要素类）、list_rasters（列出栅格数据集）、list_tables（列出表）、create_feature_class（创建要素类）、copy_data（复制数据）、delete_data（删除数据）、rename_data（重命名数据）、describe_data（描述数据集元信息）。"
+        "enum": ["create_gdb", "compact_gdb", "list_feature_classes", "list_rasters", "list_tables", "create_feature_class", "copy_data", "delete_data", "rename_data", "describe_data", "create_parquet_cache"],
+        "description": "数据管理操作类型，枚举 11 种：create_gdb（创建文件地理数据库）、compact_gdb（压缩地理数据库）、list_feature_classes（列出要素类）、list_rasters（列出栅格数据集）、list_tables（列出表）、create_feature_class（创建要素类）、copy_data（复制数据）、delete_data（删除数据）、rename_data（重命名数据）、describe_data（描述数据集元信息）、create_parquet_cache（为 Parquet 文件创建缓存，ArcGIS Pro 3.5+）。"
       },
       "out_folder_path": {
         "type": "string",
@@ -71,6 +71,14 @@
       "data_type": {
         "type": "string",
         "description": "数据类型（copy_data/delete_data/rename_data 可选，如 FeatureClass/RasterDataset/Table，默认自动推断）。物理意义为显式指定源数据的数据集类型，避免歧义。"
+      },
+      "input_path": {
+        "type": "string",
+        "description": "输入 Parquet 文件路径（仅 create_parquet_cache）。物理意义为待创建缓存的 Parquet 文件全路径。"
+      },
+      "output_cache_path": {
+        "type": "string",
+        "description": "输出缓存文件路径（仅 create_parquet_cache）。物理意义为缓存文件的输出路径，通常为 .parquet.cache 文件。"
       }
     },
     "required": ["operation"]
